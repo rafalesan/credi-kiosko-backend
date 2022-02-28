@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -36,6 +37,41 @@ class ProductController extends Controller
 
         return response($product, 200);
 
+    }
+
+    public function update(Request $request, $id) {
+
+        $product = $this->validateProduct($id);
+
+        if($product instanceof Response) {
+            return $product;
+        }
+
+        $product->update($request->all());
+
+        return response($product, 200);
+    }
+
+    public function delete($id) {
+
+        $product = $this->validateProduct($id);
+
+        if($product instanceof Response) {
+            return $product;
+        }
+
+        $product->delete();
+        return response(null, 204);
+    }
+
+    private function validateProduct($id): Response|Product {
+        $product = Product::find($id);
+        if(is_null($product)) {
+            return response([
+                'message' => trans('product-validation.product_not_found', ['attribute' => $id]),
+            ], 404);
+        }
+        return $product;
     }
 
 }
