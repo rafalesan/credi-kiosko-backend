@@ -37,28 +37,17 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, $id) {
-
         $product = $this->findOrFailProduct($id);
-
-        if($product instanceof Response) {
-            return $product;
-        }
-
         $product->update($request->all());
-
         return response($product, 200);
     }
 
     public function delete($id) {
-
         $product = $this->findOrFailProduct($id);
-
-        if($product instanceof Response) {
-            return $product;
-        }
-
         $product->delete();
-        return response(null, 204);
+        return response()->json([
+            'message' => trans('product-validation.product_deleted_successful')
+        ], 204);
     }
 
     private function findOrFailProduct($id): Response|Product {
