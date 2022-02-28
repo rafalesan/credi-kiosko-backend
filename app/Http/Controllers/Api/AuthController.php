@@ -8,13 +8,13 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use Validator;
 
 class AuthController extends Controller
 {
 
     public function register(Request $request) {
-        $validator = Validator::make($request->all(), [
+
+        $validationsResponse = $this->validateRequest($request, [
             'name' => 'required|string|max:100',
             'nickname' => 'required|string|max:30',
             'business_name' => 'required|string|max:100',
@@ -23,11 +23,8 @@ class AuthController extends Controller
             'device_name' => 'required|string|max:255',
         ]);
 
-        if($validator->fails()) {
-            return response([
-                'message' => trans('validation.request_error'),
-                'errors' => $validator->errors()->all()
-            ], 422);
+        if(!is_null($validationsResponse)) {
+            return $validationsResponse;
         }
 
         $business = Business::create([
@@ -55,17 +52,15 @@ class AuthController extends Controller
     }
 
     public function login(Request $request) {
-        $validator = Validator::make($request->all(), [
+
+        $validationsResponse = $this->validateRequest($request, [
             'email' => 'required|email',
             'password' => 'required',
             'device_name' => 'required',
         ]);
 
-        if($validator->fails()) {
-            return response([
-                'message' => trans('validation.request_error'),
-                'errors' => $validator->errors()->all()
-            ], 422);
+        if(!is_null($validationsResponse)) {
+            return $validationsResponse;
         }
 
         $user = User::where('email', $request->email)->first();
