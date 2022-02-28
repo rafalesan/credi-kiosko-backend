@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @mixin IdeHelperBusiness
@@ -18,5 +19,9 @@ class Business extends Model
      * @var array
      */
     protected $guarded = [];
+
+    public function products(): HasMany {
+        return $this->hasMany(Product::class);
+    }
 
 }
