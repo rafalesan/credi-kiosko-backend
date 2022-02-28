@@ -14,7 +14,7 @@ class AuthController extends Controller
 
     public function register(Request $request) {
 
-        $validationsResponse = $this->validateRequest($request, [
+        $this->validate($request,  [
             'name' => 'required|string|max:100',
             'nickname' => 'required|string|max:30',
             'business_name' => 'required|string|max:100',
@@ -22,10 +22,6 @@ class AuthController extends Controller
             'password' => ['required', 'confirmed', Password::defaults()],
             'device_name' => 'required|string|max:255',
         ]);
-
-        if(!is_null($validationsResponse)) {
-            return $validationsResponse;
-        }
 
         $business = Business::create([
             'name' => $request->business_name,
@@ -53,15 +49,11 @@ class AuthController extends Controller
 
     public function login(Request $request) {
 
-        $validationsResponse = $this->validateRequest($request, [
+        $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
             'device_name' => 'required',
         ]);
-
-        if(!is_null($validationsResponse)) {
-            return $validationsResponse;
-        }
 
         $user = User::where('email', $request->email)->first();
 

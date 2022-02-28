@@ -136,5 +136,5 @@ return [
             'min' => 'La :attribute debe contener más de :min caracteres',
         ],
     ],
-    'request_error' => 'Los datos de su petición contiene errores',
+    'request_error' => 'Los datos proporcionados no son válidos',
 ];

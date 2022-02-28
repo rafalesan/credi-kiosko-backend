@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Auth;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -18,14 +19,10 @@ class ProductController extends Controller
 
     public function store(Request $request) {
 
-        $validationsResponse = $this->validateRequest($request, [
+        $this->validate($request,  [
             'name'  => 'required|string|max:100',
             'price' => 'required',
         ]);
-
-        if(!is_null($validationsResponse)) {
-            return $validationsResponse;
-        }
 
         $user = Auth::user();
 
@@ -41,7 +38,7 @@ class ProductController extends Controller
 
     public function update(Request $request, $id) {
 
-        $product = $this->validateProduct($id);
+        $product = $this->findOrFailProduct($id);
 
         if($product instanceof Response) {
             return $product;
@@ -54,7 +51,7 @@ class ProductController extends Controller
 
     public function delete($id) {
 
-        $product = $this->validateProduct($id);
+        $product = $this->findOrFailProduct($id);
 
         if($product instanceof Response) {
             return $product;
@@ -64,12 +61,12 @@ class ProductController extends Controller
         return response(null, 204);
     }
 
-    private function validateProduct($id): Response|Product {
+    private function findOrFailProduct($id): Response|Product {
         $product = Product::find($id);
         if(is_null($product)) {
-            return response([
+            throw new HttpResponseException(response([
                 'message' => trans('product-validation.product_not_found', ['attribute' => $id]),
-            ], 404);
+            ], 404));
         }
         return $product;
     }
