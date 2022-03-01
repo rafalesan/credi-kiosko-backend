@@ -28,6 +28,7 @@ Route::middleware('auth:business')->group(function () {
 
     Route::controller(ProductController::class)->group(function () {
         Route::get('products', 'index');
+        Route::get('products/{id}', 'getSingleProduct');
         Route::post('products', 'store');
         Route::put('products/{id}', 'update');
         Route::delete('products/{id}', 'delete');

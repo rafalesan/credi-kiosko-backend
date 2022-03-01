@@ -6,7 +6,6 @@ use App\Models\Product;
 use Auth;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -15,6 +14,11 @@ class ProductController extends Controller
         $user = Auth::user();
         $paginatedProducts = $user->business->products()->paginate();
         return response($paginatedProducts, 200);
+    }
+
+    public function getSingleProduct($id) {
+        $product = $this->findOrFailProduct($id);
+        return response($product, 200);
     }
 
     public function store(Request $request) {
@@ -50,8 +54,10 @@ class ProductController extends Controller
         ], 204);
     }
 
-    private function findOrFailProduct($id): Response|Product {
-        $product = Product::find($id);
+    private function findOrFailProduct($id): Product {
+        $user = Auth::user();
+        $product = $user->business->products()->find($id);
+
         if(is_null($product)) {
             throw new HttpResponseException(response([
                 'message' => trans('product-validation.product_not_found', ['attribute' => $id]),
