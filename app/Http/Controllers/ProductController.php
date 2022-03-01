@@ -51,7 +51,7 @@ class ProductController extends Controller
         $product->delete();
         return response()->json([
             'message' => trans('product-validation.product_deleted_successful')
-        ], 204);
+        ]);
     }
 
     private function findOrFailProduct($id): Product {
