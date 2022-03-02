@@ -11653,6 +11653,17 @@
         {
                         return \Illuminate\Http\Request::hasValidSignatureWhileIgnoring($ignoreQuery, $absolute);
         }
+                    /**
+         * 
+         *
+         * @see \App\Providers\MacrosServiceProvider::boot()
+         * @return bool 
+         * @static 
+         */ 
+        public static function includeDeleted()
+        {
+                        return \Illuminate\Http\Request::includeDeleted();
+        }
          
     }
             /**
@@ -16581,6 +16592,17 @@
         public static function hasValidSignatureWhileIgnoring($ignoreQuery = [], $absolute = true)
         {
                         return \Illuminate\Http\Request::hasValidSignatureWhileIgnoring($ignoreQuery, $absolute);
+        }
+                    /**
+         * 
+         *
+         * @see \App\Providers\MacrosServiceProvider::boot()
+         * @return bool 
+         * @static 
+         */ 
+        public static function includeDeleted()
+        {
+                        return \Illuminate\Http\Request::includeDeleted();
         }
          
     }

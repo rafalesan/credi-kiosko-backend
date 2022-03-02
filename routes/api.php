@@ -32,6 +32,7 @@ Route::middleware('auth:business')->group(function () {
         Route::post('products', 'store');
         Route::put('products/{id}', 'update');
         Route::delete('products/{id}', 'delete');
+        Route::patch('products/{id}/restored', 'restore');
     });
 
 });

@@ -10,14 +10,18 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
 
-    public function index() {
+    public function index(Request $request) {
         $user = Auth::user();
-        $paginatedProducts = $user->business->products()->paginate();
+        if($request->includeDeleted()) {
+            $paginatedProducts = $user->business->products()->withTrashed()->paginate();
+        } else {
+            $paginatedProducts = $user->business->products()->paginate();
+        }
         return response($paginatedProducts, 200);
     }
 
-    public function getSingleProduct($id) {
-        $product = $this->findOrFailProduct($id);
+    public function getSingleProduct(Request $request, $id) {
+        $product = $this->findOrFailProduct($id, $request->includeDeleted());
         return response($product, 200);
     }
 
@@ -54,9 +58,32 @@ class ProductController extends Controller
         ]);
     }
 
-    private function findOrFailProduct($id): Product {
+    public function restore($id) {
         $user = Auth::user();
-        $product = $user->business->products()->find($id);
+        $product = $user->business->products()->onlyTrashed()->find($id);
+        if(is_null($product)) {
+            throw new HttpResponseException(response([
+                'message' => trans('product-validation.product_to_restore_not_found', ['attribute' => $id]),
+            ], 404));
+        }
+        if($product->restore()) {
+            return response()->json([
+                'message' => trans('product-validation.product_restored_successful'),
+                'data' => $product,
+            ]);
+        }
+        throw new HttpResponseException(response([
+            'message' => trans('product-validation.product_could_not_be_restored', ['attribute' => $id]),
+        ], 500));
+    }
+
+    private function findOrFailProduct($id, $includeDeleted = false): Product {
+        $user = Auth::user();
+        if($includeDeleted){
+            $product = $user->business->products()->withTrashed()->find($id);
+        } else {
+            $product = $user->business->products()->find($id);
+        }
 
         if(is_null($product)) {
             throw new HttpResponseException(response([
