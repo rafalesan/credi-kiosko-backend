@@ -54,7 +54,7 @@ class ProductController extends Controller
         $product = $this->findOrFailProduct($id);
         $product->delete();
         return response()->json([
-            'message' => trans('product-validation.product_deleted_successful')
+            'message' => trans('product.product_deleted_successful')
         ]);
     }
 
@@ -63,17 +63,17 @@ class ProductController extends Controller
         $product = $user->business->products()->onlyTrashed()->find($id);
         if(is_null($product)) {
             throw new HttpResponseException(response([
-                'message' => trans('product-validation.product_to_restore_not_found', ['attribute' => $id]),
+                'message' => trans('product.product_to_restore_not_found', ['attribute' => $id]),
             ], 404));
         }
         if($product->restore()) {
             return response()->json([
-                'message' => trans('product-validation.product_restored_successful'),
+                'message' => trans('product.product_restored_successful'),
                 'data' => $product,
             ]);
         }
         throw new HttpResponseException(response([
-            'message' => trans('product-validation.product_could_not_be_restored', ['attribute' => $id]),
+            'message' => trans('product.product_could_not_be_restored', ['attribute' => $id]),
         ], 500));
     }
 
@@ -87,7 +87,7 @@ class ProductController extends Controller
 
         if(is_null($product)) {
             throw new HttpResponseException(response([
-                'message' => trans('product-validation.product_not_found', ['attribute' => $id]),
+                'message' => trans('product.product_not_found', ['attribute' => $id]),
             ], 404));
         }
         return $product;
