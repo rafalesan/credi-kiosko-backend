@@ -41,6 +41,32 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Customer
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $nickname
+ * @property string $email
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereNickname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+	class IdeHelperCustomer {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Product
  *
  * @property int $id
@@ -63,7 +89,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Product withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Product withoutTrashed()
- * @mixin \Eloquent
  */
 	class IdeHelperProduct {}
 }
