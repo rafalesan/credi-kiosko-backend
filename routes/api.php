@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\BusinessCustomerController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,14 @@ Route::middleware('auth:business')->group(function () {
         Route::patch('products/{id}/restored', 'restore');
     });
 
-});
+    Route::controller(BusinessCustomerController::class)->group(function() {
+        Route::get('customers', 'index');
+        Route::get('customers/{id}', 'getSingleCustomer');
+        Route::post('customers', 'store');
+        Route::put('customers/{id}', 'update');
+        Route::delete('customers/{id}', 'delete');
+        Route::patch('customers/{id}/restored', 'restore');
+    });
 
+});
 
