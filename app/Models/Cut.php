@@ -17,4 +17,12 @@ class Cut extends Model
      */
     protected $guarded = [];
 
+    public function payments() {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function customer() {
+        return $this->hasOne(Customer::class);
+    }
+
 }

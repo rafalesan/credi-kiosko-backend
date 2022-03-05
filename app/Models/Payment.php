@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @mixin IdeHelperCustomer
- */
-class Customer extends Model
+class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that aren't mass assignable.
@@ -19,12 +17,12 @@ class Customer extends Model
      */
     protected $guarded = [];
 
-    public function payments() {
-        return $this->hasMany(Payment::class);
+    public function cutoff() {
+        return $this->hasOne(Cut::class);
     }
 
-    public function cutoffs() {
-        return $this->hasMany(Cut::class);
+    public function customer() {
+        return $this->hasOne(Customer::class);
     }
 
 }
