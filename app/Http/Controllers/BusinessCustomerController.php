@@ -23,7 +23,7 @@ class BusinessCustomerController extends Controller
         return response($paginatedCustomers, 200);
     }
 
-    public function getSingleCustomer(Request $request, $id) {
+    public function show(Request $request, $id) {
         $customer = $this->findOfFailCustomer($id, $request->includeDeleted());
         return response($customer, 200);
     }

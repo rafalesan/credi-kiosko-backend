@@ -29,7 +29,7 @@ Route::middleware('auth:business')->group(function () {
 
     Route::controller(ProductController::class)->group(function () {
         Route::get('products', 'index');
-        Route::get('products/{id}', 'getSingleProduct');
+        Route::get('products/{id}', 'show');
         Route::post('products', 'store');
         Route::put('products/{id}', 'update');
         Route::delete('products/{id}', 'delete');
@@ -38,7 +38,7 @@ Route::middleware('auth:business')->group(function () {
 
     Route::controller(BusinessCustomerController::class)->group(function() {
         Route::get('customers', 'index');
-        Route::get('customers/{id}', 'getSingleCustomer');
+        Route::get('customers/{id}', 'show');
         Route::post('customers', 'store');
         Route::put('customers/{id}', 'update');
         Route::delete('customers/{id}', 'delete');

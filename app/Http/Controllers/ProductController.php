@@ -20,7 +20,7 @@ class ProductController extends Controller
         return response($paginatedProducts, 200);
     }
 
-    public function getSingleProduct(Request $request, $id) {
+    public function show(Request $request, $id) {
         $product = $this->findOrFailProduct($id, $request->includeDeleted());
         return response($product, 200);
     }
