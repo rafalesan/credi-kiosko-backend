@@ -13,9 +13,9 @@ class ProductController extends Controller
     public function index(Request $request) {
         $user = Auth::user();
         if($request->includeDeleted()) {
-            $paginatedProducts = $user->business->products()->withTrashed()->paginate();
+            $paginatedProducts = $user->business->products()->withTrashed()->simplePaginate();
         } else {
-            $paginatedProducts = $user->business->products()->paginate();
+            $paginatedProducts = $user->business->products()->simplePaginate();
         }
         return response($paginatedProducts, 200);
     }

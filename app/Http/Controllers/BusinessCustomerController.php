@@ -15,10 +15,10 @@ class BusinessCustomerController extends Controller
         $user = Auth::user();
         if($request->includeDeleted()) {
             $paginatedCustomers = $user->business->customersWithTrashed()
-                                                 ->paginate();
+                                                 ->simplePaginate();
         } else {
             $paginatedCustomers = $user->business->customers()
-                                                 ->paginate();
+                                                 ->simplePaginate();
         }
         return response($paginatedCustomers, 200);
     }
@@ -51,7 +51,7 @@ class BusinessCustomerController extends Controller
                                        true);
 
         $customerWithPivot = $user->business->customers()
-                                            ->paginate();
+                                            ->simplePaginate();
 
         return response($customerWithPivot, 200);
     }
