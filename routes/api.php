@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BusinessCustomerController;
+use App\Http\Controllers\CreditController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,12 @@ Route::middleware('auth:business')->group(function () {
         Route::put('customers/{id}', 'update');
         Route::delete('customers/{id}', 'delete');
         Route::patch('customers/{id}/restored', 'restore');
+    });
+
+    Route::controller(CreditController::class)->group(function() {
+        Route::get('credits', 'index');
+        Route::get('credits/{id}', 'show');
+        Route::post('credits', 'store');
     });
 
 });

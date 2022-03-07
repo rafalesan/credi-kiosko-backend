@@ -27,4 +27,8 @@ class Customer extends Model
         return $this->hasMany(Cut::class);
     }
 
+    public function credits() {
+        return $this->hasMany(Credit::class);
+    }
+
 }

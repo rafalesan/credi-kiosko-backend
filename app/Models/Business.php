@@ -21,22 +21,32 @@ class Business extends Model
      */
     protected $guarded = [];
 
+    public function credits() {
+        return $this->hasMany(Credit::class);
+    }
+
     public function products() {
         return $this->hasMany(Product::class);
     }
 
     public function customers() : BelongsToMany {
+        return $this->belongsToMany(Customer::class);
+    }
+
+    public function customersWithPivot() : BelongsToMany {
         return $this->belongsToMany(Customer::class)
                     ->whereNull('business_customer.deleted_at')
-                    ->withPivot(['business_customer_name',
+                    ->withPivot(['id',
+                                 'business_customer_name',
                                  'business_customer_nickname'])
                     ->withTimestamps()
                     ->withPivot('deleted_at');
     }
 
-    public function customersWithTrashed() : BelongsToMany {
+    public function customersWithPivotWithTrashed() : BelongsToMany {
         return $this->belongsToMany(Customer::class)
-                    ->withPivot(['business_customer_name',
+                    ->withPivot(['id',
+                                 'business_customer_name',
                                  'business_customer_nickname'])
                     ->withTimestamps()
                     ->withPivot('deleted_at');

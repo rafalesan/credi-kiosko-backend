@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperCredit
+ */
 class Credit extends Model
 {
     use HasFactory, SoftDeletes;
@@ -31,7 +34,8 @@ class Credit extends Model
 
     public function products() {
         return $this->belongsToMany(Product::class)
-                    ->withPivot(['product_name',
+                    ->withPivot(['id',
+                                 'product_name',
                                  'price',
                                  'quantity',
                                  'total']);

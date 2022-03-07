@@ -15,15 +15,17 @@ return new class extends Migration
     {
         Schema::create('credits', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('cut_id')->nullable();
             $table->timestamp('date');
             $table->decimal('total', 17, 4);
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('customer_id')->references('id')->on('customers');
+            $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('cut_id')->references('id')->on('cuts');
         });
     }
