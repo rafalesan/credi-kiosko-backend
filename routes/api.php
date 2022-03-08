@@ -50,6 +50,9 @@ Route::middleware('auth:business')->group(function () {
         Route::get('credits', 'index');
         Route::get('credits/{id}', 'show');
         Route::post('credits', 'store');
+        Route::put('credits/{id}', 'update');
+        Route::delete('credits/{id}', 'delete');
+        Route::patch('credits/{id}/restored', 'restore');
     });
 
 });
