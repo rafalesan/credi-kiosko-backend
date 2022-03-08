@@ -37,19 +37,19 @@ class CreditController extends Controller
 
         $this->validateCreditRequest($request);
 
-        $user = Auth::user();
+        $this->validateCalculations($request);
 
-        $creditRequest = $request;
+        $user = Auth::user();
 
         $credit = Credit::create([
             'business_id' => $user->business_id,
             'user_id' => $user->id,
-            'customer_id' => $creditRequest->customer_id,
-            'date' => $creditRequest->date,
-            'total' => $creditRequest->total,
+            'customer_id' => $request->customer_id,
+            'date' => $request->date,
+            'total' => $request->total,
         ]);
 
-        foreach($creditRequest->credit_products as $product) {
+        foreach($request->credit_products as $product) {
             $credit->products()->attach($product['product_id'],
                                         ['product_name' => $product['product_name'],
                                          'price' => $product['price'],
@@ -69,6 +69,9 @@ class CreditController extends Controller
         $this->validateCreditRequest($request);
 
         $credit = $this->findOrFailCredit($id);
+
+        $this->validateCalculations($request);
+
         $credit->update($request->all(['customer_id',
                                        'date',
                                        'total']));
@@ -121,13 +124,13 @@ class CreditController extends Controller
         $creditRequest->validate([
             'customer_id' => 'numeric|required',
             'date' => 'string|required',
-            'total' => 'string|required',
+            'total' => 'numeric|required',
             'credit_products' => 'array|required|min:1',
             'credit_products.*.product_id' => 'numeric|required',
             'credit_products.*.product_name' => 'string|required',
-            'credit_products.*.price' => 'string|required',
-            'credit_products.*.quantity' => 'string|required',
-            'credit_products.*.total' => "string|required"
+            'credit_products.*.price' => 'numeric|required',
+            'credit_products.*.quantity' => 'numeric|required',
+            'credit_products.*.total' => "numeric|required"
         ]);
     }
 
@@ -144,6 +147,35 @@ class CreditController extends Controller
             ], 404));
         }
         return $credit;
+    }
+
+    private function validateCalculations($creditRequest) {
+        $totalCredit = (float) $creditRequest->total;
+        $totalCreditCalculated = 0.0;
+
+        foreach ($creditRequest->credit_products as $product) {
+            $lineTotal = (float) $product['total'];
+            $linePrice = (float) $product['price'];
+            $lineQuantity = (float) $product['quantity'];
+            $totalCalculated = $linePrice * $lineQuantity;
+            if($lineTotal != $totalCalculated) {
+                throw new HttpResponseException(response([
+                    'message' => trans('credit.credit_product_wrong_calculation', ['price' => $product['price'],
+                                                                                        'quantity' => $product['quantity'],
+                                                                                        'wrong_total' => $product['total'],
+                                                                                        'right_total' => $totalCalculated]),
+                ], 422));
+            }
+            $totalCreditCalculated += $totalCalculated;
+        }
+
+        if($totalCredit != $totalCreditCalculated) {
+            throw new HttpResponseException(response([
+                'message' => trans('credit.credit_wrong_total_calculation', ['wrong_total' => $totalCredit,
+                                                                                  'right_total' => $totalCreditCalculated]),
+            ], 422));
+        }
+
     }
 
 }
