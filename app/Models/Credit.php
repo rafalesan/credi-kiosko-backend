@@ -41,4 +41,8 @@ class Credit extends Model
                                  'total']);
     }
 
+    public function creditProducts() {
+        return $this->hasMany(CreditProduct::class);
+    }
+
 }

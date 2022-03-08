@@ -14,7 +14,7 @@ class CreditController extends Controller
     public function index() {
         $user = Auth::user();
 
-        $credits = $user->business->credits()->with('products')->simplePaginate();
+        $credits = $user->business->credits()->with('creditProducts')->simplePaginate();
 
         return response($credits, 200);
     }
@@ -22,7 +22,7 @@ class CreditController extends Controller
     public function show($id) {
         $user = Auth::user();
 
-        $credit = $user->business->credits()->with('products')->find($id);
+        $credit = $user->business->credits()->with('creditProducts')->find($id);
 
         if(is_null($credit)) {
             throw new HttpResponseException(response([
