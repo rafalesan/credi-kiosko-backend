@@ -39,12 +39,12 @@ class CreditController extends Controller
             'customer_id' => 'numeric|required',
             'date' => 'string|required',
             'total' => 'string|required',
-            'products' => 'array|required|min:1',
-            'products.*.product_id' => 'numeric|required',
-            'products.*.product_name' => 'string|required',
-            'products.*.price' => 'string|required',
-            'products.*.quantity' => 'string|required',
-            'products.*.total' => "string|required"
+            'credit_products' => 'array|required|min:1',
+            'credit_products.*.product_id' => 'numeric|required',
+            'credit_products.*.product_name' => 'string|required',
+            'credit_products.*.price' => 'string|required',
+            'credit_products.*.quantity' => 'string|required',
+            'credit_products.*.total' => "string|required"
         ]);
 
         $user = Auth::user();
@@ -59,7 +59,7 @@ class CreditController extends Controller
             'total' => $creditRequest->total,
         ]);
 
-        foreach($creditRequest->products as $product) {
+        foreach($creditRequest->credit_products as $product) {
             $credit->products()->attach($product['product_id'],
                                         ['product_name' => $product['product_name'],
                                          'price' => $product['price'],
@@ -69,7 +69,7 @@ class CreditController extends Controller
                                          'updated_at' => Carbon::now()]);
         }
 
-        $creditSaved = Credit::with('products')->find($credit->id);
+        $creditSaved = Credit::with('creditProducts')->find($credit->id);
 
         return response($creditSaved, 200);
 
