@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('cut_id')->nullable();
             $table->timestamp('date');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->decimal('amount', 17, 4);
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('cut_id')->references('id')->on('cuts');
         });
