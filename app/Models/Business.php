@@ -25,6 +25,10 @@ class Business extends Model
         return $this->hasMany(Credit::class);
     }
 
+    public function payments() {
+        return $this->hasMany(Payment::class);
+    }
+
     public function products() {
         return $this->hasMany(Product::class);
     }

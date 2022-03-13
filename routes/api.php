@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BusinessCustomerController;
 use App\Http\Controllers\CreditController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,14 @@ Route::middleware('auth:business')->group(function () {
         Route::put('credits/{id}', 'update');
         Route::delete('credits/{id}', 'delete');
         Route::patch('credits/{id}/restored', 'restore');
+    });
+
+    Route::controller(PaymentController::class)->group(function() {
+        Route::get('payments', 'index');
+        Route::get('payments/{id}', 'show');
+        Route::post('payments', 'store');
+        Route::put('payments/{id}', 'update');
+        Route::delete('payments/{id}', 'delete');
     });
 
 });
