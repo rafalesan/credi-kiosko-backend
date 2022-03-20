@@ -6,8 +6,6 @@ use App\Http\Controllers\CreditController;
 use App\Http\Controllers\CutOffController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
-use App\Models\Product;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -69,14 +67,8 @@ Route::middleware('auth:business')->group(function () {
 
     Route::controller(CutOffController::class)->group(function () {
         Route::get('cutoffs', 'index');
+        Route::post('cutoffs', 'store');
         Route::post('customers/{customerId}/cutoffs', 'storeCustomerCutOff');
-    });
-
-    Route::get('test', function () {
-        $products = Product::whereBetween('created_at', [Carbon::createFromTimestamp(0), Carbon::now()])->get();
-        return response()->json([
-            'products' => $products,
-        ]);
     });
 
 });

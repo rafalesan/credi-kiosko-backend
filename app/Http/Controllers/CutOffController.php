@@ -25,6 +25,26 @@ class CutOffController extends Controller
         return response($cutOffs);
     }
 
+    public function store(Request $request) {
+        $request->validate([
+            'cut_off_date' => 'required|string'
+        ]);
+
+        $user = Auth::user();
+
+        $customers = $user->business->customers;
+
+        $cutOffs = [];
+
+        foreach ($customers as $customer) {
+            $cutOff = $this->applyCutOffToCustomer($customer, $user, $request);
+            $cutOffs[] = $cutOff;
+        }
+
+        return response($cutOffs);
+
+    }
+
     public function storeCustomerCutOff(Request $request, $customerId) {
 
         $request->validate([
@@ -35,19 +55,27 @@ class CutOffController extends Controller
 
         $customer = $this->findOrFailCustomer($customerId);
 
+        $cutOff = $this->applyCutOffToCustomer($customer, $user, $request);
+
+        return response($cutOff);
+
+    }
+
+    private function applyCutOffToCustomer($customer, $user, $request) : Cut {
+
         $lastCutOff = $customer->cutoffs()->latest()->first();
 
         $lastCutOffDate = $lastCutOff->cut_off_date ?? Carbon::createFromTimestamp(0);
 
         $credits = Credit::where('customer_id', $customer->id)
-                         ->whereNull('cut_id')
-                         ->whereBetween('date', [$lastCutOffDate,
-                                                         $request->cut_off_date]);
+            ->whereNull('cut_id')
+            ->whereBetween('date', [$lastCutOffDate,
+                $request->cut_off_date]);
 
         $payments = Payment::where('customer_id', $customer->id)
-                           ->whereNull('cut_id')
-                           ->whereBetween('date', [$lastCutOffDate,
-                                                           $request->cut_off_date]);
+            ->whereNull('cut_id')
+            ->whereBetween('date', [$lastCutOffDate,
+                $request->cut_off_date]);
 
         $totalCredits = $credits->get()->sum('total');
         $totalPayments = $payments->get()->sum('amount');
@@ -82,7 +110,7 @@ class CutOffController extends Controller
         $credits->update(['cut_id' => $cutOff->id]);
         $payments->update(['cut_id' => $cutOff->id]);
 
-        return response($cutOff);
+        return $cutOff;
 
     }
 
