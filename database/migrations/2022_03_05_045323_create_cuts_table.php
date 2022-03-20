@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('cuts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('surplus_payment_id')->nullable();
             $table->timestamp('cut_off_date');
             $table->decimal('total_credits', 17, 4);
             $table->decimal('total_payments', 17, 4);

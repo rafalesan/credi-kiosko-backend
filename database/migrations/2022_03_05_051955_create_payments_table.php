@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('business_id');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('cut_id')->nullable();
+            $table->boolean('is_surplus')->default(false);
             $table->timestamp('date');
             $table->decimal('balance_before_payment', 17, 4);
             $table->decimal('balance_after_payment', 17, 4);
