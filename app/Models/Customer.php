@@ -31,4 +31,8 @@ class Customer extends Model
         return $this->hasMany(Credit::class);
     }
 
+    public function businesses() {
+        return $this->belongsToMany(Business::class);
+    }
+
 }
