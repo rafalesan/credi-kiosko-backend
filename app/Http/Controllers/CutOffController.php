@@ -34,6 +34,12 @@ class CutOffController extends Controller
 
         $customers = $user->business->customers;
 
+        if($customers->isEmpty()) {
+            throw new HttpResponseException(response([
+                'message' => trans('cutoff.your_business_does_not_have_customers_registered_yet'),
+            ], 422));
+        }
+
         $cutOffs = [];
 
         foreach ($customers as $customer) {
@@ -41,11 +47,17 @@ class CutOffController extends Controller
             $cutOffs[] = $cutOff;
         }
 
-        $result = array_filter($cutOffs, function ($cutoff) {
+        $nonNullCutOffs = array_filter($cutOffs, function ($cutoff) {
            return $cutoff !== NULL;
         });
 
-        return response($result);
+        if(empty($nonNullCutOffs)) {
+            throw new HttpResponseException(response([
+                'message' => trans('cutoff.the_customers_do_not_have_credits'),
+            ], 422));
+        }
+
+        return response($nonNullCutOffs);
 
     }
 
@@ -60,6 +72,13 @@ class CutOffController extends Controller
         $customer = $this->findOrFailCustomer($customerId);
 
         $cutOff = $this->applyCutOffToCustomer($customer, $user, $request);
+
+        if(is_null($cutOff)) {
+            $customerPivot = $user->business->customersWithPivot()->find($customerId)->pivot;
+            throw new HttpResponseException(response([
+                'message' => trans('cutoff.the_customer_does_not_have_credits', ['attribute' => $customerPivot->business_customer_name]),
+            ], 422));
+        }
 
         return response($cutOff);
 
