@@ -41,7 +41,11 @@ class CutOffController extends Controller
             $cutOffs[] = $cutOff;
         }
 
-        return response($cutOffs);
+        $result = array_filter($cutOffs, function ($cutoff) {
+           return $cutoff !== NULL;
+        });
+
+        return response($result);
 
     }
 
@@ -61,7 +65,7 @@ class CutOffController extends Controller
 
     }
 
-    private function applyCutOffToCustomer($customer, $user, $request) : Cut {
+    private function applyCutOffToCustomer($customer, $user, $request) : ?Cut {
 
         $lastCutOff = $customer->cutoffs()->latest()->first();
 
@@ -71,6 +75,10 @@ class CutOffController extends Controller
             ->whereNull('cut_id')
             ->whereBetween('date', [$lastCutOffDate,
                 $request->cut_off_date]);
+
+        if($credits->get()->count() == 0) {
+            return null;
+        }
 
         $payments = Payment::where('customer_id', $customer->id)
             ->whereNull('cut_id')

@@ -34,11 +34,7 @@ class Credit extends Model
 
     public function products() {
         return $this->belongsToMany(Product::class)
-                    ->withPivot(['id',
-                                 'product_name',
-                                 'price',
-                                 'quantity',
-                                 'total']);
+                    ->using(CreditProduct::class);
     }
 
     public function creditProducts() {
