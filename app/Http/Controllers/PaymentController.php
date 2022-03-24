@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cut;
 use App\Models\Payment;
 use Auth;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -39,6 +40,15 @@ class PaymentController extends Controller
         $balanceAfterPayment = "0";
 
         if(!is_null($request->cut_id)) {
+
+            $cutOff = Cut::find($request->cut_id);
+
+            if($cutOff->balance <= 0) {
+                throw new HttpResponseException(response([
+                    'message' => trans('payment.could_not_apply_payment_to_a_cut_off_already_paid'),
+                ], 422));
+            }
+
             $lastPayment = $user->business->payments()
                                           ->where('cut_id', $request->cut_id)
                                           ->latest()
