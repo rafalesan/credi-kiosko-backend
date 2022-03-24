@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cut;
 use App\Models\Payment;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 
@@ -55,6 +56,24 @@ class PaymentController extends Controller
                                           ->first();
             $balanceBeforePayment = $lastPayment->balance_after_payment;
             $balanceAfterPayment = $balanceBeforePayment - $request->amount;
+            $cutOffBalance = $balanceAfterPayment;
+
+            if($cutOffBalance < 0) {
+                $surplusPayment = Payment::create([
+                    'business_id' => $user->business_id,
+                    'customer_id' => $request->customer_id,
+                    'is_surplus' => true,
+                    'date' => Carbon::now(),
+                    'balance_before_payment' => "0",
+                    'balance_after_payment' => "0",
+                    'amount' => abs($cutOffBalance),
+                ]);
+                $cutOffBalance = 0;
+                $cutOff->surplus_payment_id = $surplusPayment->id;
+            }
+
+            $cutOff->balance = $cutOffBalance;
+            $cutOff->update();
         }
 
         $payment = Payment::create([
