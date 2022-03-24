@@ -106,7 +106,14 @@ class CutOffController extends Controller
 
         $totalCredits = $credits->get()->sum('total');
         $totalPayments = $payments->get()->sum('amount');
-        $balance = $totalCredits - $totalPayments;
+        $balance = $totalCredits;
+
+        foreach($payments->get() as $payment) {
+            $payment->balance_before_payment = $balance;
+            $balance -= $payment->amount;
+            $payment->balance_after_payment = $balance;
+            $payment->update();
+        }
 
         $surplusPaymentId = null;
 
