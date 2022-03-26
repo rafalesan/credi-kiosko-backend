@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('date');
             $table->decimal('balance_before_arrear', 17, 4);
             $table->decimal('balance_after_arrear', 17, 4);
-            $table->decimal('percentage', 17, 4);
+            $table->decimal('percentage', 17, 4)->nullable();
             $table->decimal('amount', 17, 4);
             $table->timestamps();
             $table->softDeletes();

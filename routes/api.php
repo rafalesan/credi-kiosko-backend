@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\ArrearController;
 use App\Http\Controllers\BusinessCustomerController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\CutOffController;
@@ -69,6 +70,11 @@ Route::middleware('auth:business')->group(function () {
         Route::get('cutoffs', 'index');
         Route::post('cutoffs', 'store');
         Route::post('customers/{customerId}/cutoffs', 'storeCustomerCutOff');
+    });
+
+    Route::controller(ArrearController::class)->group(function () {
+        Route::get('cutoffs/{cutOffId}/arrears', 'index');
+        Route::post('cutoffs/{cutOffId}/arrears', 'store');
     });
 
 });
