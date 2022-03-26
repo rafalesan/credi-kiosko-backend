@@ -77,5 +77,9 @@ Route::middleware('auth:business')->group(function () {
         Route::post('cutoffs/{cutOffId}/arrears', 'store');
     });
 
-});
+    Route::get('clear', function () {
+        $result = Artisan::call('migrate:fresh');
+        return response($result, 200);
+    });
 
+});
