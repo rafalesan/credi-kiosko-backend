@@ -55,7 +55,9 @@ class AuthController extends Controller
             'device_name' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)
+            ->with('business')
+            ->first();
 
         if(!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
